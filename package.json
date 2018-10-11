@@ -1,4 +1,9 @@
 {
+	"name": "Anarchyee Bot",
+	"version": "1.0.0",
+	"description": "Discord Bot for USYee",
+	"author": "Matt Bahr m@bahr.codes",
+	"main": "bot.js",
 	"dependencies": {
 		"bufferutil": "^3.0.0",
 		"discord.js": "^11.3.2",
