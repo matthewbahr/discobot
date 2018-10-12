@@ -6,6 +6,7 @@ var emotes = require('./emotes.json');
 const crow = '127651916254543872';
 const tree = '85614143951892480';
 const bot = '429357061126750208';
+const uberbot = '85614143951892480';
 
 var messageMap = new Object();
 
@@ -124,7 +125,7 @@ client.on('message', msg => {
   }
 
 									    //Probably Ultragunner's ID?
-  if(msg.content.toLowerCase().includes('ultragunner') && msg.member.id !== '429357061126750208' && msg.member.id !==crow){
+  if(msg.content.toLowerCase().includes('ultragunner') && msg.member.id !== '429357061126750208'){
 
 	msg.channel.send( '<:I1:454503952369844244> ULTRAGUNNER <:I1:454503952369844244>' );
 	
