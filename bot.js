@@ -26,7 +26,7 @@ client.on('message', msg => {
 
   if (msg.member.id !== bot && msg.content.toLowerCase().includes('fire truck') || msg.content.toLowerCase().includes('firetruck')) {
 	msg.channel.send('[Visibly excited] FIRE TRUCK');
-}
+  }
   
 
   if (msg.content.toLowerCase().includes('!randomize me captain') && msg.member.id !== tree && msg.member.id !== crow) {
@@ -135,6 +135,14 @@ client.on('message', msg => {
 });
 
 client.login(auth.token);
+
+function milkill(msg){
+	//todo: parse input format
+	//!killed add "Blah blah" URL
+	//killed list
+	//killed random?
+	//Milennial mention + random milkill fact
+}
 
 function randName(){
 
