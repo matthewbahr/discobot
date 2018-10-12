@@ -3,8 +3,9 @@ var Discord = require('discord.js');
 var auth = require('./auth.json');
 var names = require('./names.json');
 var emotes = require('./emotes.json');
-var crow = '127651916254543872';
-var tree = '85614143951892480';
+const crow = '127651916254543872';
+const tree = '85614143951892480';
+const bot = '429357061126750208';
 
 var messageMap = new Object();
 
@@ -22,7 +23,7 @@ client.on('message', msg => {
 
   }
 
-  if (msg.content.toLowerCase().includes('fire truck') || msg.content.toLowerCase().includes('firetruck')) {
+  if (msg.member.id !== bot && msg.content.toLowerCase().includes('fire truck') || msg.content.toLowerCase().includes('firetruck')) {
 	msg.channel.send('[Visibly excited] FIRE TRUCK');
 }
   
