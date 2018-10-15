@@ -1,15 +1,21 @@
+//Packages
 var Discord = require('discord.js');
+var fs = require('fs');
 
-var auth = require('./auth.json');
-var names = require('./names.json');
-var emotes = require('./emotes.json');
+//Keys
 const crow = '127651916254543872';
 const tree = '85614143951892480';
 const bot = '429357061126750208';
 const uberbot = '85614143951892480';
+const mkFile = 'mk_file.json';
 
-var messageMap = new Object();
+//Json
+var auth = require('./auth.json');
+var names = require('./names.json');
+var emotes = require('./emotes.json');
+var milkill = require(mkfile);
 
+//Objects
 const client = new Discord.Client();
 
 client.on('ready', () => {
@@ -137,11 +143,81 @@ client.on('message', msg => {
 client.login(auth.token);
 
 function milkill(msg){
-	//todo: parse input format
+	var content = msg.content;
+	content = content.split(" ");
+
+	//Content [1] must be a valid operation
+	switch(content[1].toLowerCase()) {
+		case "add":
+			mkAdd(content.slice(1, content.length));
+			break;
+		case "remove":
+			mkRemove(content[2]);
+			break;
+		case "list":
+			mkList(msg.channel);
+			break;
+		case "random":
+			mkRandom(msg.channel);
+			break;
+		default:
+			msg.channel.send('Milennials just killed me.\nThanks Obama. <:jeb:245823943854784523>\nProper syntax is `!killed [add, remove, list].`');
+
+	}
+
 	//!killed add "Blah blah" URL
 	//killed list
 	//killed random?
 	//Milennial mention + random milkill fact
+}
+
+function mkAdd(contentArr){
+
+	readMK();
+
+	var url = contentArr[contentArr.length - 1];
+	var toJoin = contentArr.slice(0,contentArr.length - 1);
+	var content = toJoin.join(" ");
+
+	milkill[milkill.keyIndex] = {content, url};
+	milkill.keyIndex = milkill.keyIndex + 1;
+
+	writeMK();
+
+}
+
+function mkRemove(id){
+
+	readMK();
+	
+
+
+}
+
+function mkList(channel){
+
+}
+
+function mkRandom(channel){
+
+}
+
+function readMK(){
+	fs.readFile('myjsonfile.json', 'utf8', function readFileCallback(err, data){
+		if (err){
+			console.log(err);
+		} else {
+			milkill = JSON.parse(data);	
+			//obj.table.push({id: 2, square:3}); //add some data
+			//json = JSON.stringify(obj); //convert it back to json
+			//fs.writeFile('myjsonfile.json', json, 'utf8', callback); // write it back 
+		}});
+
+
+}
+
+function writeMK(){
+	fs.writeFile(mkFile, milkill, 'utf8');
 }
 
 function randName(){
