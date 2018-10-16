@@ -184,7 +184,7 @@ function mkAdd(contentArr){
 
 	var milkill = readMK();
 	var url = contentArr[contentArr.length - 1];
-	var toJoin = contentArr.slice(0,contentArr.length - 1);
+	var toJoin = contentArr.slice(1,contentArr.length - 1);
 	var content = toJoin.join(" ");
 
 	milkill.killed[milkill.keyIndex] = 
@@ -203,7 +203,7 @@ function mkRemove(id){
 
 	var milkill = readMK();
 
-	milkill.killed[id] = {};
+	delete milkill.killed[id];
 
 	writeMK(milkill);
 
@@ -215,7 +215,8 @@ function mkList(channel){
 
 	for (key in milkill.killed){
 		if(milkill.killed.hasOwnProperty(key)) {
-			console.log(key + " = " + milkill.killed[key]);
+			var datum = milkill.killed[key];
+			console.log(key + " = " + datum.content + " Source: " + datum.url);
 		}
 	}
 
@@ -244,7 +245,7 @@ function readMK(){
 }
 
 function writeMK(milkill){
-	fs.writeFileSync(mkFile, milkill);
+	fs.writeFileSync('./mk_file.json', JSON.stringify(milkill));
 }
 
 function randName(){
