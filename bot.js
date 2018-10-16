@@ -179,7 +179,13 @@ function mkAdd(contentArr){
 	var toJoin = contentArr.slice(0,contentArr.length - 1);
 	var content = toJoin.join(" ");
 
-	milkill[milkill.keyIndex] = {content, url};
+	milkill.killed[milkill.keyIndex](
+			{
+				"content : " + content,
+				"url : " + url
+			}
+		);
+
 	milkill.keyIndex = milkill.keyIndex + 1;
 
 	writeMK();
@@ -189,16 +195,32 @@ function mkAdd(contentArr){
 function mkRemove(id){
 
 	readMK();
-	
 
+	milkill.killed[id] = {};
+
+	writeMK();
 
 }
 
 function mkList(channel){
 
+	readMK();
+
+	for (for key in milkill.killed){
+		if(milkill.killed.hasOwnProperty(key)) {
+			console.log(key + " = " + milkill.killed[key]);
+		}
+	}
+
 }
 
 function mkRandom(channel){
+
+	readMK();
+	var killed = milkill.killed;
+	var randIndex = Math.floor(Math.random()*killed.length);
+
+	console.log(killed[randIndex]);
 
 }
 
