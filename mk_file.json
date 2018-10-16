@@ -1,3 +1,7 @@
 {
-	keyIndex : 0
+	keyIndex : 0,
+	
+	killed : {}
+	
+
 }
