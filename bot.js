@@ -5,7 +5,7 @@ var fs = require('fs');
 //Keys
 const crow = '127651916254543872';
 const tree = '85614143951892480';
-const bot = '429357061126750208';
+const yourself = '429357061126750208';
 const uberbot = '85614143951892480';
 const mkFile = 'mk_file.json';
 
@@ -25,15 +25,15 @@ client.on('message', msg => {
 
   if (msg.content.toLowerCase().includes('!help')){
 
-	msg.channel.send('\n ```Commands:\n 1. Randomize me captain\n 2. Strip me \n 3. Cowboy baby \n 4. Knock Me Off \n 5. Pole rider \n 6. Allstar me bruh\n```');
+	msg.channel.send('\n ```Commands:\n 1. Randomize me captain\n 2. Strip me \n 3. Cowboy baby \n 4. Knock Me Off \n 5. Pole rider \n 6. Allstar me bruh\n 7. Killed by Millennials```');
 
   }
 
-  if (msg.member.id !== bot && msg.content.toLowerCase().includes('fire truck') || msg.content.toLowerCase().includes('firetruck')) {
+  if (msg.member.id !== yourself && msg.content.toLowerCase().includes('fire truck') || msg.content.toLowerCase().includes('firetruck')) {
 	msg.channel.send('[Visibly excited] FIRE TRUCK');
   }
   
-  if (msg.content.toLowerCase().includes('!killed')){
+  if (msg.content.toLowerCase().includes('!killed') && msg.member.id !== yourself){
 	mkMap(msg);
   }
 
@@ -149,29 +149,30 @@ function mkMap(msg){
 	content = content.split(" ");
 
 	console.log("milkill");
+	
+	if(content.length > 1){
+		//Content [1] must be a valid operation
+		switch(content[1].toLowerCase()) {
+			case "add":
+				mkAdd(content.slice(1, content.length), msg.channel);
+				break;
+			case "remove":
+				mkRemove(content[2], msg.channel);
+				break;
+			case "list":
+				mkList(msg.channel);
+				break;
+			case "random":
+				mkRandom(msg.channel);
+				break;
+			default:
+				msg.channel.send('Milennials just killed me.\nThanks Obama. <:jeb:245823943854784523>\nProper syntax is `!killed [add, remove, list].`');
 
-	//Content [1] must be a valid operation
-	switch(content[1].toLowerCase()) {
-		case "add":
-			console.log("add");
-			mkAdd(content.slice(1, content.length));
-			break;
-		case "remove":
-			console.log("remove");
-			mkRemove(content[2]);
-			break;
-		case "list":
-			console.log("list");
-			mkList(msg.channel);
-			break;
-		case "random":
-			console.log("random");
-			mkRandom(msg.channel);
-			break;
-		default:
-			console.log("default");
-			msg.channel.send('Milennials just killed me.\nThanks Obama. <:jeb:245823943854784523>\nProper syntax is `!killed [add, remove, list].`');
+		}
+	}
 
+	else {
+		msg.channel.send('Milennials just killed me.\nThanks Obama. <:jeb:245823943854784523>\nProper syntax is `!killed [add, remove, list].`');
 	}
 
 	//!killed add "Blah blah" URL
@@ -180,12 +181,18 @@ function mkMap(msg){
 	//Milennial mention + random milkill fact
 }
 
-function mkAdd(contentArr){
+function mkAdd(contentArr, channel){
 
+	if(contentArr.length < 2){
+		channel.send("Proper add format is `!killed add {whatever milennials killed this time} {URL proving they killed it}`");
+		return 0;
+	}
 	var milkill = readMK();
 	var url = contentArr[contentArr.length - 1];
 	var toJoin = contentArr.slice(1,contentArr.length - 1);
 	var content = toJoin.join(" ");
+
+	url = fixURL(url);
 
 	milkill.killed[milkill.keyIndex] = 
 			{
@@ -193,17 +200,28 @@ function mkAdd(contentArr){
 				url: url
 			};
 
+	outputMK(channel, milkill, milkill.keyIndex);
+
 	milkill.keyIndex = milkill.keyIndex + 1;
 
 	writeMK(milkill);
 
 }
 
-function mkRemove(id){
+function fixURL(url){
+   if (!/^(f|ht)tps?:\/\//i.test(url)) {
+      url = "https://" + url;
+   }
+   return url;
+}
+
+function mkRemove(id, channel){
 
 	var milkill = readMK();
 
 	delete milkill.killed[id];
+
+	channel.send("Deleted ID:" + id);
 
 	writeMK(milkill);
 
@@ -216,7 +234,7 @@ function mkList(channel){
 	for (key in milkill.killed){
 		if(milkill.killed.hasOwnProperty(key)) {
 			var datum = milkill.killed[key];
-			console.log(key + " = " + datum.content + " Source: " + datum.url);
+			outputMK(channel, milkill, key);
 		}
 	}
 
@@ -230,6 +248,13 @@ function mkRandom(channel){
 	var randIndex = Math.floor(Math.random()*killed.length);
 
 	console.log(killed[randIndex]);
+
+}
+
+function outputMK(channel, milkill, id){
+
+	var datum = milkill.killed[id];
+	channel.send("`" + id + "`  " + datum.content + " `" + datum.url + "`");
 
 }
 
