@@ -13,7 +13,6 @@ const mkFile = 'mk_file.json';
 var auth = require('./auth.json');
 var names = require('./names.json');
 var emotes = require('./emotes.json');
-var milkill = require(mkfile);
 
 //Objects
 const client = new Discord.Client();
@@ -34,6 +33,9 @@ client.on('message', msg => {
 	msg.channel.send('[Visibly excited] FIRE TRUCK');
   }
   
+  if (msg.content.toLowerCase().includes('!killed')){
+	mkMap(msg);
+  }
 
   if (msg.content.toLowerCase().includes('!randomize me captain') && msg.member.id !== tree && msg.member.id !== crow) {
 
@@ -142,25 +144,32 @@ client.on('message', msg => {
 
 client.login(auth.token);
 
-function milkill(msg){
+function mkMap(msg){
 	var content = msg.content;
 	content = content.split(" ");
+
+	console.log("milkill");
 
 	//Content [1] must be a valid operation
 	switch(content[1].toLowerCase()) {
 		case "add":
+			console.log("add");
 			mkAdd(content.slice(1, content.length));
 			break;
 		case "remove":
+			console.log("remove");
 			mkRemove(content[2]);
 			break;
 		case "list":
+			console.log("list");
 			mkList(msg.channel);
 			break;
 		case "random":
+			console.log("random");
 			mkRandom(msg.channel);
 			break;
 		default:
+			console.log("default");
 			msg.channel.send('Milennials just killed me.\nThanks Obama. <:jeb:245823943854784523>\nProper syntax is `!killed [add, remove, list].`');
 
 	}
@@ -173,40 +182,38 @@ function milkill(msg){
 
 function mkAdd(contentArr){
 
-	readMK();
-
+	var milkill = readMK();
 	var url = contentArr[contentArr.length - 1];
 	var toJoin = contentArr.slice(0,contentArr.length - 1);
 	var content = toJoin.join(" ");
 
-	milkill.killed[milkill.keyIndex](
+	milkill.killed[milkill.keyIndex] = 
 			{
-				"content : " + content,
-				"url : " + url
-			}
-		);
+				content: content,
+				url: url
+			};
 
 	milkill.keyIndex = milkill.keyIndex + 1;
 
-	writeMK();
+	writeMK(milkill);
 
 }
 
 function mkRemove(id){
 
-	readMK();
+	var milkill = readMK();
 
 	milkill.killed[id] = {};
 
-	writeMK();
+	writeMK(milkill);
 
 }
 
 function mkList(channel){
 
-	readMK();
+	var milkill = readMK();
 
-	for (for key in milkill.killed){
+	for (key in milkill.killed){
 		if(milkill.killed.hasOwnProperty(key)) {
 			console.log(key + " = " + milkill.killed[key]);
 		}
@@ -216,7 +223,8 @@ function mkList(channel){
 
 function mkRandom(channel){
 
-	readMK();
+	var milkill = readMK();
+
 	var killed = milkill.killed;
 	var randIndex = Math.floor(Math.random()*killed.length);
 
@@ -225,21 +233,18 @@ function mkRandom(channel){
 }
 
 function readMK(){
-	fs.readFile('myjsonfile.json', 'utf8', function readFileCallback(err, data){
-		if (err){
-			console.log(err);
-		} else {
-			milkill = JSON.parse(data);	
-			//obj.table.push({id: 2, square:3}); //add some data
-			//json = JSON.stringify(obj); //convert it back to json
-			//fs.writeFile('myjsonfile.json', json, 'utf8', callback); // write it back 
-		}});
 
+	var mk = fs.readFileSync('./mk_file.json');
+	var parsed = JSON.parse(mk);
+
+	console.log(parsed);
+
+	return parsed;
 
 }
 
-function writeMK(){
-	fs.writeFile(mkFile, milkill, 'utf8');
+function writeMK(milkill){
+	fs.writeFileSync(mkFile, milkill);
 }
 
 function randName(){
