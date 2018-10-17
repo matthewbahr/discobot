@@ -254,7 +254,7 @@ function mkRandom(channel){
 function outputMK(channel, milkill, id){
 
 	var datum = milkill.killed[id];
-	channel.send("`" + id + "`  " + datum.content + " `" + datum.url + "`");
+	channel.send("`" + id + "`  " + datum.content + " <" + datum.url + ">");
 
 }
 
