@@ -36,6 +36,10 @@ client.on('message', msg => {
   if (msg.content.toLowerCase().includes('!killed') && msg.member.id !== yourself){
 	mkMap(msg);
   }
+  
+  if (msg.content.toLowerCase().includes('millennials') && (msg.member.id !== yourself && msg.member.id !== uberbot)){
+	mkRandom(msg.channel);
+  }
 
   if (msg.content.toLowerCase().includes('!randomize me captain') && msg.member.id !== tree && msg.member.id !== crow) {
 
@@ -244,10 +248,21 @@ function mkRandom(channel){
 
 	var milkill = readMK();
 
-	var killed = milkill.killed;
-	var randIndex = Math.floor(Math.random()*killed.length);
+	var randIndex = Math.floor(Math.random() * Object.keys(milkill.killed).length);
 
-	console.log(killed[randIndex]);
+	var index = 0;
+
+	for (key in milkill.killed){
+		if(index === randIndex){
+			//outputMK(channel, milkill, key);
+			var datum = milkill.killed[key];
+			channel.send("Damn millennials, did you know they killed " + datum.content + "? No seriously, I have proof! <" + datum.url + ">");
+			return 0;
+		}
+		else{
+			index = index + 1;
+		}
+	}
 
 }
 
@@ -262,8 +277,6 @@ function readMK(){
 
 	var mk = fs.readFileSync('./mk_file.json');
 	var parsed = JSON.parse(mk);
-
-	console.log(parsed);
 
 	return parsed;
 
