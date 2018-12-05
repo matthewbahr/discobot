@@ -37,7 +37,7 @@ client.on('message', msg => {
 	mkMap(msg);
   }
   
-  if (msg.content.toLowerCase().includes('millennials') && (msg.member.id !== yourself && msg.member.id !== uberbot)){
+  if (msg.content.toLowerCase().includes('millennial') && (msg.member.id !== yourself && msg.member.id !== uberbot)){
 	mkRandom(msg.channel);
   }
 
@@ -234,13 +234,18 @@ function mkRemove(id, channel){
 function mkList(channel){
 
 	var milkill = readMK();
+	
+	var output = "";
 
 	for (key in milkill.killed){
 		if(milkill.killed.hasOwnProperty(key)) {
 			var datum = milkill.killed[key];
-			outputMK(channel, milkill, key);
+			//outputMK(channel, milkill, key);
+			output += "\n" +  structureMKString(channel, milkill, key);
 		}
 	}
+
+	channel.send(output);
 
 }
 
@@ -268,8 +273,17 @@ function mkRandom(channel){
 
 function outputMK(channel, milkill, id){
 
+	var output = structureMKString(channel, milkill, id);
+	//var datum = milkill.killed[id];
+	//channel.send("`" + id + "`  " + datum.content + " <" + datum.url + ">");
+	channel.send(output);
+
+}
+
+function structureMKString(channel, milkill, id){
+
 	var datum = milkill.killed[id];
-	channel.send("`" + id + "`  " + datum.content + " <" + datum.url + ">");
+	return "`" + id + "`  " + datum.content + " <" + datum.url + ">";
 
 }
 
