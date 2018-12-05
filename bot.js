@@ -152,8 +152,6 @@ function mkMap(msg){
 	var content = msg.content;
 	content = content.split(" ");
 
-	console.log("milkill");
-	
 	if(content.length > 1){
 		//Content [1] must be a valid operation
 		switch(content[1].toLowerCase()) {
